@@ -12,4 +12,20 @@ WHERE
     AND l2.num = l3.num;
 
 -- Solve with window functions
+SELECT DISTINCT
+    num AS ConsecutiveNums
+FROM (
+    SELECT
+        id,
+        num,
+        CASE
+            WHEN 
+                LEAD(num, 1) OVER (ORDER BY id) = num AND
+                LEAD(num, 2) OVER (ORDER BY id) = num THEN 1
+            ELSE 0
+        END AS consecutive
+    FROM
+        logs
+) cons
+WHERE consecutive = 1;
 
