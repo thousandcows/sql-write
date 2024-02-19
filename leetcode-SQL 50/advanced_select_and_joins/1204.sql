@@ -1,19 +1,18 @@
 -- 1204. Last Person to Fit in the Bus
-WITH total_weight AS (
+WITH CumulativeWeight AS (
     SELECT
-        q.person_name, 
-        q.turn,
-        (SELECT SUM(weight) FROM Queue WHERE turn <= q.turn) AS total_weight
+        person_name,
+        turn,
+        SUM(weight) OVER (ORDER BY turn) AS total_weight
     FROM
-        Queue q
+        Queue
 )
-
 SELECT
-    tw.person_name
+    person_name
 FROM
-    total_weight tw
+    CumulativeWeight
 WHERE
-    tw.total_weight <= 1000
+    total_weight <= 1000
 ORDER BY
-    tw.total_weight DESC
+    turn DESC
 LIMIT 1;
